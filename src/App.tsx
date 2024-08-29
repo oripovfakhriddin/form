@@ -29,7 +29,7 @@ function App() {
     const formData = new FormData(formElement);
     setIsLoading(true);
     fetch(
-      "https://script.google.com/macros/s/AKfycbzu5EXiFyFqLQDH-nO4lEVgOYm8NL5jzhpnS_j6DTGdwe6duvlYAvURJ9uUIZFAMrKd/exec",
+      "https://script.google.com/macros/s/AKfycbwXYiCxWpQ2HwDgh1NONli_25f_I3OTjDcHsdaoyXNDHqJuuXPlGVDStjWBr_CtutM/exec",
       {
         method: "POST",
         body: formData,
