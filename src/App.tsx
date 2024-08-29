@@ -1,6 +1,8 @@
 import { Fragment, useState } from "react";
 import Logo from "./assets/logo.jpg";
 import "./index.css";
+const api =
+  "https://script.google.com/macros/s/AKfycbytOD6fLjVtze711rnekXjcN_7hjHgBiImO3Dg2ZF2nC0XW79aiOlidsLhUZLrXS_4C/exec";
 
 const countryData = [
   "Andijon",
@@ -29,7 +31,7 @@ function App() {
     const formData = new FormData(formElement);
     setIsLoading(true);
     fetch(
-      "https://script.google.com/macros/s/AKfycbytOD6fLjVtze711rnekXjcN_7hjHgBiImO3Dg2ZF2nC0XW79aiOlidsLhUZLrXS_4C/exec",
+      "https://script.google.com/macros/s/AKfycbzu5EXiFyFqLQDH-nO4lEVgOYm8NL5jzhpnS_j6DTGdwe6duvlYAvURJ9uUIZFAMrKd/exec",
       {
         method: "POST",
         body: formData,
@@ -53,9 +55,9 @@ function App() {
   };
   return (
     <Fragment>
-      <header className="relative bg-slate-400">
+      <header className="relative ">
         <div className="pl-5 pr-5 ml-auto mr-auto max-w-7xl">
-          <h1 className="text-center text-red-700 text-xl md:text-3xl lg:text-4xl pt-3 pb-3">
+          <h1 className="text-center font-bold text-red-700 text-xl md:text-3xl lg:text-4xl pt-3 pb-3">
             Siz bilan bog'lanishimiz uchun ma'lumot qoldiring!
           </h1>
         </div>
