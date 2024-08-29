@@ -23,33 +23,52 @@ function App() {
   const [isToast, setIsToast] = useState(false);
   const [isToastFalse, setIsToastFalse] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const Submit = (e: React.FormEvent<HTMLFormElement>) => {
-    const formElement: any = document.querySelector("form");
+  const [data, setData] = useState({
+    fullName: "",
+    address: "",
+    phone: "+998",
+    message: "",
+  });
+
+  const { address, phone, message, fullName } = data;
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
+  ) => {
+    setData({ ...data, [e.target.name]: e.target.value });
+  };
+
+  const Submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(formElement);
-    setIsLoading(true);
-    fetch(
-      "https://script.google.com/macros/s/AKfycbwXYiCxWpQ2HwDgh1NONli_25f_I3OTjDcHsdaoyXNDHqJuuXPlGVDStjWBr_CtutM/exec",
-      {
-        method: "POST",
-        body: formData,
-      }
-    )
-      .then((data) => {
-        if (data.status >= 200 && data.status <= 299) {
-          setIsToast(true);
-          setTimeout(() => {
-            setIsToast(false);
-          }, 5000);
-        } else {
-          setIsToastFalse(true);
+    try {
+      setIsLoading(true);
+      const response = await fetch(
+        "https://v1.nocodeapi.com/menboburman/google_sheets/JCOeCfjwlzVKKdzx?tabId=Sheet1",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify([
+            [new Date().toLocaleString(), fullName, address, phone, message],
+          ]),
         }
-        setIsLoading(false);
-      })
-      .catch(() => {
+      );
+      await response.json();
+      setIsLoading(false);
+      if (response.status >= 200 && response.status <= 299) {
+        setIsToast(true);
+      } else {
         setIsToastFalse(true);
-        setIsLoading(false);
+      }
+      setData({
+        ...data,
+        fullName: "",
+        address: "",
+        phone: "+998",
+        message: "",
       });
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <Fragment>
@@ -101,9 +120,9 @@ function App() {
               >
                 <path
                   stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                   d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
                 />
               </svg>
@@ -150,9 +169,9 @@ function App() {
               >
                 <path
                   stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                   d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
                 />
               </svg>
@@ -176,70 +195,89 @@ function App() {
               <input
                 type="text"
                 id="full_name"
-                name="FullName"
+                name="fullName"
+                value={fullName}
+                onChange={(e) => {
+                  handleChange(e);
+                }}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Amirov Temur"
                 required
               />
             </div>
-            <div className="pb-3">
+            <div className="pb-3 w-full">
               <label
-                htmlFor="countries"
+                htmlFor="phone"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
-                Manzilingiz:
+                Telefon raqamingiz:
               </label>
-              <select
-                id="address"
-                name="Address"
+              <input
+                value={phone}
+                onChange={(e) => {
+                  handleChange(e);
+                }}
+                type="tel"
+                id="phone"
+                name="phone"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="+998901234567"
+                pattern="^\+998[0-9]{9}$"
+                title="Telefon raqam +998 bilan boshlanib, jami 12 raqamdan iborat bo'lishi kerak."
                 required
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
-                 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
-                 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 
-                 dark:focus:border-blue-500"
-              >
-                {countryData.map((country, index) => (
-                  <option key={index} value={country}>
-                    {country}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
             <div className="sm:flex justify-between gap-5">
               <div className="pb-3 w-full">
                 <label
-                  htmlFor="phone"
+                  htmlFor="address"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Telefon raqamingiz:
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="Phone"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="+998901234567"
-                  pattern="^\+998[0-9]{9}$"
-                  title="Telefon raqam +998 bilan boshlanib, jami 12 raqamdan iborat bo'lishi kerak."
-                  required
-                />
-              </div>
-              <div className="pb-5 w-full">
-                <label
-                  htmlFor="countries"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Biz haqimizda kimdan eshitdingiz:
+                  Manzilingiz:
                 </label>
                 <select
-                  id="countries"
-                  name="Message"
+                  id="address"
+                  name="address"
+                  value={address}
+                  onChange={(e) => {
+                    handleChange(e);
+                  }}
                   required
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
                  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
                  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 
                  dark:focus:border-blue-500"
                 >
+                  <option selected>Viloyatingizni tanlang</option>
+                  {countryData.map((country, index) => (
+                    <option key={index} value={country}>
+                      {country}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="pb-5 w-full">
+                <label
+                  htmlFor="message"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Biz haqimizda kimdan eshitdingiz:
+                </label>
+                <select
+                  id="message"
+                  name="message"
+                  value={message}
+                  onChange={(e) => {
+                    handleChange(e);
+                  }}
+                  required
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
+                 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
+                 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 
+                 dark:focus:border-blue-500"
+                >
+                  <option selected>Tanlang</option>
                   <option value="telegramdan">Telegram</option>
                   <option value="instagramdan">Instagram</option>
                   <option value="do'stimdan">Do'stimdan</option>
