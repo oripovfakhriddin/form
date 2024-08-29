@@ -1,8 +1,6 @@
 import { Fragment, useState } from "react";
 import Logo from "./assets/logo.jpg";
 import "./index.css";
-const api =
-  "https://script.google.com/macros/s/AKfycbytOD6fLjVtze711rnekXjcN_7hjHgBiImO3Dg2ZF2nC0XW79aiOlidsLhUZLrXS_4C/exec";
 
 const countryData = [
   "Andijon",
